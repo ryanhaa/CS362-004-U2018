@@ -1266,7 +1266,7 @@ int updateCoins(int player, struct gameState *state, int bonus)
     {
         int i;
         int currentPlayer = whoseTurn(state);
-        for (i = 0; i <=3; i++)
+        for (i = 0; i <3; i++)
         {
           drawCard(currentPlayer, state);
         }
