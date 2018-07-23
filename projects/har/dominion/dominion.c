@@ -288,7 +288,7 @@ int buyCard(int supplyPos, struct gameState *state) {
       printf("There are not any of that type of card left\n");
     return -1;
   } else if (state->coins < getCost(supplyPos)){
-    if (DEBUG) 
+    if (DEBUG)
       printf("You do not have enough money to buy that. You have %d coins.\n", state->coins);
     return -1;
   } else {
@@ -655,9 +655,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 
   int tributeRevealedCards[2] = {-1, -1};
   int temphand[MAX_HAND];// moved above the if statement
-  int drawntreasure=0;
   int cardDrawn;
-  int z = 0;// this is the counter for the temp hand
+  //int z = 0;// this is the counter for the temp hand
   if (nextPlayer > (state->numPlayers - 1)){
     nextPlayer = 0;
   }
@@ -1123,6 +1122,7 @@ int discardCard(int handPos, int currentPlayer, struct gameState *state, int tra
       //add card to played pile
       state->playedCards[state->playedCardCount] = state->hand[currentPlayer][handPos]; 
       state->playedCardCount++;
+      
     }
 	
   //set played card to -1
