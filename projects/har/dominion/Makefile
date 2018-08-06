@@ -34,8 +34,6 @@ randomtests: dominion.o rngs.o interface.o
 	echo "Results of randomtestadventurer :" > randomtestadventurer.out
 	gcc -o randomtestadventurer -g  randomtestadventurer.c dominion.c rngs.c interface.c $(CFLAGS)
 	./randomtestadventurer >> randomtestadventurer.out
-	
-#oter:
 	gcov randomtestadventurer.c >> randomtestadventurer.out
 	gcov dominion.c >> randomtestadventurer.out
 	cat dominion.c.gcov >> randomtestadventurer.out
