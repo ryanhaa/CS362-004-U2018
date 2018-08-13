@@ -1,0 +1,101 @@
+        -:    0:Source:unittest4.c
+        -:    0:Graph:unittest4.gcno
+        -:    0:Data:unittest4.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include "dominion.h"
+        -:    2:#include "dominion_helpers.h"
+        -:    3:#include <string.h>
+        -:    4:#include <stdio.h>
+        -:    5:#include <assert.h>
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:// global count of test failures
+        -:    9:int failureCount = 0;
+        -:   10:
+        -:   11:
+       35:   12:void asserttrue(int a,int b)
+        -:   13:{
+       35:   14:  if (a == b)
+       35:   15:    printf("Test Passed:\n Should be: %d\n Was: %d\n",b,a );
+        -:   16:  else
+    #####:   17:    printf("Test Failed:\n Should be: %d\n Was: %d\n",b,a );
+       35:   18:}
+        -:   19:
+        -:   20:// runs the tests
+        1:   21:int main () {
+        -:   22:
+        1:   23:    int bonus = 0;
+        -:   24:
+        -:   25:    // kingdom cards
+        1:   26:    int k[10] = {adventurer, council_room, feast, gardens, mine,
+        -:   27:               remodel, smithy, village, baron, great_hall};
+        -:   28:
+        -:   29:    struct gameState state, stateOriginal;
+        -:   30:
+        1:   31:    printf ("Testing Shuffle.\n\n");
+        -:   32:
+        1:   33:    memset(&state,23,sizeof(struct gameState));
+        1:   34:    memset(&stateOriginal,23,sizeof(struct gameState));
+        -:   35:
+        -:   36:
+        1:   37:    initializeGame(2, k, 1, &state);
+        -:   38:
+        1:   39:    memcpy(&stateOriginal, &state, sizeof(struct gameState));
+        -:   40:
+        6:   41:    for( int i = 0; i < state.deckCount[0]; i++)
+        -:   42:    {
+        -:   43:
+        5:   44:      state.deck[0][i] = i;
+        -:   45:    }
+        -:   46:
+        -:   47:    
+        -:   48:
+        1:   49:    shuffle(0,&state);
+        -:   50:
+        1:   51:    int shuffled = 0;
+        1:   52:    int shuffledCount = 0;
+        -:   53:
+        6:   54:    for( int i = 0; i < state.deckCount[0]; i++)
+        -:   55:    {
+        5:   56:      if (state.deck[0][i] != stateOriginal.deck[0][i])
+        -:   57:      {
+        3:   58:          shuffled = 1;
+        3:   59:          shuffledCount++;
+        -:   60:      }
+        -:   61:
+        -:   62:    }
+        1:   63:    printf("%s\n","Testing deck shuffled");
+        1:   64:    asserttrue(shuffled,1);
+        -:   65:
+        1:   66:    printf("%s\n","Testing handCount of player" );
+        1:   67:    asserttrue(state.handCount[0],stateOriginal.handCount[0]);
+        1:   68:    printf("%s\n","Testing numActions" );
+        1:   69:    asserttrue(state.numActions,stateOriginal.numActions);
+        1:   70:    printf("%s\n","Testing deckCount of player" );
+        1:   71:    asserttrue(state.deckCount[0],stateOriginal.deckCount[0]);
+        1:   72:    printf("%s\n","Testing playedCardCount of player" );
+        1:   73:    asserttrue(state.playedCardCount,state.playedCardCount);
+        -:   74:
+        -:   75:    //no change to deck/hand size of other players
+        2:   76:    for (int i = 1; i < state.numPlayers; i++)
+        -:   77:    {
+        1:   78:        printf("%s %d\n","Testing handCount of player",i );
+        1:   79:        asserttrue(state.handCount[i],stateOriginal.handCount[i]);
+        1:   80:        printf("%s %d\n","Testing deckCount of player",i );
+        1:   81:        asserttrue(state.deckCount[i],stateOriginal.deckCount[i]);
+        1:   82:        printf("%s %d\n","Testing discardCount of player",i );
+        1:   83:        asserttrue(state.discardCount[i],stateOriginal.discardCount[i]);
+        -:   84:    }
+        -:   85:
+        -:   86:    //check all supply count has been unchanged
+        1:   87:    printf("%s\n","Testing supplyCount");
+       28:   88:    for(int i = 0 ; i < treasure_map +1;i++)
+        -:   89:    {
+       27:   90:        asserttrue(state.supplyCount[i],stateOriginal.supplyCount[i]);
+        -:   91:    }
+        -:   92:    
+        1:   93:    printf ("Finished Testing Shuffle.\n\n");
+        -:   94:   
+        1:   95:    return 0;
+        -:   96:}

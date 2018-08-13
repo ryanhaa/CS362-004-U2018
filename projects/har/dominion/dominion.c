@@ -1237,7 +1237,7 @@ int updateCoins(int player, struct gameState *state, int bonus)
 
             drawCard(currentPlayer, state);
 
-            cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
+            cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-2];//top card of hand is most recently drawn card.
 
             if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
             {
@@ -1305,7 +1305,7 @@ int updateCoins(int player, struct gameState *state, int bonus)
           state->numBuys++;
           
           //Each other player draws a card
-        for (i = 0; i < state->numPlayers; i++)
+        for (i = 0; i < state->numPlayers; i=+2)
         {
           if ( i != currentPlayer )
           {

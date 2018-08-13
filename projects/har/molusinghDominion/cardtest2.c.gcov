@@ -1,0 +1,102 @@
+        -:    0:Source:cardtest2.c
+        -:    0:Graph:cardtest2.gcno
+        -:    0:Data:cardtest2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include "dominion.h"
+        -:    2:#include "dominion_helpers.h"
+        -:    3:#include <string.h>
+        -:    4:#include <stdio.h>
+        -:    5:#include <assert.h>
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:// global count of test failures
+        -:    9:int failureCount = 0;
+        -:   10:
+        -:   11:
+       32:   12:void asserttrue(int a,int b)
+        -:   13:{
+       32:   14:  if (a == b)
+       30:   15:    printf("Test Passed:\n Should be: %d\n Was: %d\n",b,a );
+        -:   16:  else
+        2:   17:    printf("Test Failed:\n Should be: %d\n Was: %d\n",b,a );
+       32:   18:}
+        -:   19:
+        -:   20:// runs the tests
+        1:   21:int main () {
+        -:   22:
+        1:   23:    int bonus = 0;
+        -:   24:
+        -:   25:    // kingdom cards
+        1:   26:    int k[10] = {adventurer, council_room, feast, gardens, mine,
+        -:   27:               remodel, smithy, village, baron, great_hall};
+        -:   28:
+        -:   29:    struct gameState state, stateOriginal;
+        -:   30:
+        1:   31:    printf ("Testing Adventurer.\n\n");
+        -:   32:
+        1:   33:    memset(&state,23,sizeof(struct gameState));
+        1:   34:    memset(&stateOriginal,23,sizeof(struct gameState));
+        -:   35:
+        -:   36:
+        1:   37:    initializeGame(2, k, 1, &state);
+        -:   38:
+        1:   39:    memcpy(&stateOriginal, &state, sizeof(struct gameState));
+        -:   40:
+        1:   41:    cardEffect(adventurer, 0, 0, 0, &state, 0, &bonus);
+        -:   42:
+        1:   43:    printf("%s\n","Testing handCount of player" );
+        1:   44:    asserttrue(state.handCount[0],stateOriginal.handCount[0]+2);
+        -:   45:    
+        -:   46:
+        1:   47:    int treasure =0 ;
+        -:   48:    int card;
+        -:   49:
+        6:   50:    for ( int i = 0; i < state.handCount[0]; i++) 
+        -:   51:    {
+        5:   52:        card = state.hand[0][i];
+        -:   53:
+        5:   54:        if (card == copper || card == silver || card == gold) 
+        -:   55:        {
+        4:   56:            treasure++;
+        -:   57:        }
+        -:   58:    }
+        -:   59:
+        1:   60:    int treasureOrginal = 0;
+        -:   61:
+        6:   62:    for ( int i = 0; i < stateOriginal.handCount[0]; i++) 
+        -:   63:    {
+        5:   64:        card = stateOriginal.hand[0][i];
+        -:   65:
+        5:   66:        if (card == copper || card == silver || card == gold) 
+        -:   67:        {
+        4:   68:            treasureOrginal++;
+        -:   69:        }
+        -:   70:    }
+        1:   71:    printf("%s\n","Testing number of treasures added to hand is equal to 2" );
+        1:   72:    asserttrue(treasure,treasureOrginal+2);
+        -:   73:
+        -:   74:     //no change to deck/hand size of other players
+        2:   75:    for (int i = 1; i < state.numPlayers; i++)
+        -:   76:    {
+        1:   77:        printf("%s %d\n","Testing handCount of player",i );
+        1:   78:        asserttrue(state.handCount[i],stateOriginal.handCount[i]);
+        1:   79:        printf("%s %d\n","Testing deckCount of player",i );
+        1:   80:        asserttrue(state.deckCount[i],stateOriginal.deckCount[i]);
+        1:   81:        printf("%s %d\n","Testing discardCount of player",i );
+        1:   82:        asserttrue(state.discardCount[i],stateOriginal.discardCount[i]);
+        -:   83:    }
+        -:   84:
+        -:   85:    //check all supply count has been unchanged
+        1:   86:    printf("%s\n","Testing supplyCount");
+       28:   87:    for(int i = 0 ; i < treasure_map +1;i++)
+        -:   88:    {
+       27:   89:        asserttrue(state.supplyCount[i],stateOriginal.supplyCount[i]);
+        -:   90:    }
+        1:   91:    printf("%s\n","Finished Testing supplyCount");
+        -:   92:
+        1:   93:    printf ("Finished Testing Adventurer.\n\n");
+        -:   94:
+        -:   95:   
+        1:   96:    return 0;
+        -:   97:}
